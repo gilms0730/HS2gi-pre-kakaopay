@@ -1,8 +1,11 @@
 package com.example.gms.product.service;
+import com.example.gms.product.model.PaymentProducts;
 import com.example.gms.product.model.Product;
 import com.example.gms.product.repository.ProductRepository;
+import com.siot.IamportRestClient.response.Payment;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,4 +54,22 @@ public class ProductService {
     public void delete(Integer id) {
         productRepository.delete(Product.builder().id(id).build());
     }
+
+    public Integer getTotalPrice(PaymentProducts datas){
+
+        List<Integer> productIds = new ArrayList<>();
+        for (Product product: datas.getProducts()) {
+            productIds.add(product.getId());
+        }
+
+        List<Product> products = productRepository.findAllById(productIds);
+
+        Integer totalPrice = 0;
+        for (Product product: products) {
+            totalPrice += product.getPrice();
+        }
+
+        return  totalPrice;
+    }
+
 }
